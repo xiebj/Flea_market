@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+    //作标题栏并有搜索框
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="fill_parent"
+                android:layout_height="49dp"
+                android:layout_alignParentTop="true"
+                android:checkedButton="@+id/btn0"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/btn0"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="全部"/>
+
+                <RadioButton
+                    android:id="@+id/btn1"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="我能"/>
+
+                <RadioButton
+                    android:id="@+id/btn2"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="教学书籍"/>
+
+                <RadioButton
+                    android:id="@+id/btn3"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="数码家电"/>
+
+                <RadioButton
+                    android:id="@+id/btn4"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="日化服饰"/>
+
+                <RadioButton
+                    android:id="@+id/btn5"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="文体其他"/>
+
+                <RadioButton
+                    android:id="@+id/btn6"
+                    style="@style/horizontal_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/radio_shape_line"
+                    android:button="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="更多"/>
+            </RadioGroup>
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.example.administrator.flea_market.widget.RefreshListView
+            android:id="@+id/refresh_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@color/divider"
+            android:dividerHeight="4dp"/>
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/r1"
+        android:title="大一"/>
+    <item
+        android:id="@+id/r2"
+        android:title="大二"/>
+    <item
+        android:id="@+id/r3"
+        android:title="大三"/>
+    <item
+        android:id="@+id/r4"
+        android:title="大四"/>
+    <item
+        android:id="@+id/r5"
+        android:title="硕士"/>
+    <item
+        android:id="@+id/r6"
+        android:title="博士"/>
+    <item
+        android:id="@+id/r7"
+        android:title="考研"/>
+    <item
+        android:id="@+id/r8"
+        android:title="四六级"/>
+    <item
+        android:id="@+id/r9"
+        android:title="出国"/>
+</menu>

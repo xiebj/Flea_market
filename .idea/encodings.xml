@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/libs/universal-image-loader-1.9.3.jar" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/home_widget/ListItemAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/home_widget/MyApplication.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/home_widget/NoScrollGridAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/home_widget/NoScrollGridView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/widget/RefreshFooter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/widget/RefreshHeader.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/widget/RefreshListView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/administrator/flea_market/widget/RefreshListViewListener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/arrow_down.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/item_gridview.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/refresh_footer.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/refresh_header.xml" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

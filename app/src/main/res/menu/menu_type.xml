@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/t1"
+      android:title="数码家电"/>
+    <item android:id="@+id/t2"
+          android:title="日化服饰"/>
+    <item android:id="@+id/t3"
+          android:title="文体其他"/>
+</menu>

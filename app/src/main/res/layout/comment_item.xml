@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal">
+
+        <circleimageview.CircleImageView
+            android:id="@+id/comment_circleImageView"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@mipmap/ic_launcher"
+            app:border_color="#ccc"
+            app:border_width="1dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginTop="8dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/comment_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:text="谢柏基"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/comment_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:gravity="center_vertical"
+                    android:text="2天前"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            >
+
+            <TextView
+                android:id="@+id/comment_detial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:maxLength="100"
+                android:text="感觉还不错呀"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

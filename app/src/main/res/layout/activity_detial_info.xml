@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/title_d"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/colorPrimary"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:text="宝贝详情"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollview4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom4"
+        android:layout_below="@+id/title_d">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                >
+
+                <circleimageview.CircleImageView
+                    android:id="@+id/head_pic"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/ic_launcher"
+                    app:border_color="#ccc"
+                    app:border_width="1dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="6"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/detial_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:gravity="center_vertical"
+                        android:text="谢柏基"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/detial_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="17dp"
+                        android:text="数据科学与计算机学院"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="¥"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/detial_price"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:text="58"
+                        android:textSize="20sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="这张门票是今年1月份在网上买的，发票还在，3月25号的大学城演唱会，因为最后有事情无法参加，特此转让，下面有发票图。"
+                    android:textSize="13sp"
+                    />
+
+                <com.example.administrator.flea_market.home_widget.NoScrollGridView
+                    android:id="@+id/detial_gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:numColumns="1"
+                    android:verticalSpacing="10dp"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/divider"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/comment_board"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="留言板"
+                    android:textSize="16sp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#aeacac"
+                    />
+
+                <ListView
+                    android:id="@+id/comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/click_comment"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/comment_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/comment"/>
+
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="8.5dp"
+                android:gravity="center"
+                android:text="留言"
+                android:textSize="9sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/chat"/>
+
+            <Button
+                android:id="@+id/chat_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="我想要"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_comment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey"/>
+
+        <TextView
+            android:id="@+id/hide_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:drawableBottom="@drawable/hide_dowm"
+            android:text="隐藏"
+            android:textColor="@color/txtgrey"
+            android:textSize="13sp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/hide_down"
+            android:background="@color/grey"/>
+
+        <EditText
+            android:id="@+id/comment_content"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/hide_down"
+            android:background="@null"
+            android:hint="输入评论内容"
+            android:singleLine="true"
+            android:textSize="15sp"/>
+
+        <Button
+            android:id="@+id/comment_send"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:background="#4dc445"
+            android:text="发送"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+</RelativeLayout>
