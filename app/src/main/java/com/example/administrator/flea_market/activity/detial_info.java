@@ -2,7 +2,6 @@ package com.example.administrator.flea_market.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,8 +23,9 @@ import android.widget.Toast;
 
 import com.example.administrator.flea_market.R;
 import com.example.administrator.flea_market.bean.MyGoods;
+import com.example.administrator.flea_market.bean.MyUser;
 import com.example.administrator.flea_market.home_widget.NoScrollGridView;
-import com.example.administrator.flea_market.widget.Comment;
+import com.example.administrator.flea_market.bean.Comment;
 import com.example.administrator.flea_market.widget.Comment_Adapter;
 import com.example.administrator.flea_market.widget.CustomProgressDialog;
 import com.example.administrator.flea_market.widget.Detial_GridAdapter;
@@ -37,8 +37,12 @@ import java.util.List;
 
 import circleimageview.CircleImageView;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 
 public class detial_info extends Activity implements View.OnClickListener {
     private NoScrollGridView detial_gridview;
@@ -67,6 +71,8 @@ public class detial_info extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detial_info);
         object_id = getIntent().getStringExtra("object_id");
+        post = new MyGoods();
+        post.setObjectId(object_id);
         //从服务器返回数据前先显示加载动画
         dialog =new CustomProgressDialog(this, "正在加载中",R.anim.frame);
         dialog.setCanceledOnTouchOutside(false);
@@ -75,14 +81,6 @@ public class detial_info extends Activity implements View.OnClickListener {
         comment_list = (ListView) findViewById(R.id.comment_list);
         // 初始化数据
         data = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            String content = "感觉这货还不错呀~~~";
-            String comment_time = "两天前";
-            String name = "谢柏基";
-            String avatar = "http://img.my.csdn.net/uploads/201410/19/1413698837_7507.jpg";
-            Comment temp = new Comment(avatar, name, comment_time, content);
-            data.add(temp);
-        }
         // 初始化适配器
         adapterComment = new Comment_Adapter(getApplicationContext(), data);
         BmobQuery<MyGoods> query = new BmobQuery<MyGoods>();
@@ -92,19 +90,6 @@ public class detial_info extends Activity implements View.OnClickListener {
             @Override
             public void done(MyGoods object, BmobException e) {
                 if (e == null) {
-                    // 为评论列表设置适配器
-                    comment_list.setAdapter(adapterComment);
-                    setListViewHeightBasedOnChildren(comment_list);
-                    comment = (ImageView) findViewById(R.id.comment_pic);
-                    hide_down = (TextView) findViewById(R.id.hide_down);
-                    comment_board = (TextView) findViewById(R.id.comment_board);
-                    comment_content = (EditText) findViewById(R.id.comment_content);
-                    comment_send = (Button) findViewById(R.id.comment_send);
-
-                    rl_enroll = (LinearLayout) findViewById(R.id.bottom4);
-                    click_comment = (LinearLayout) findViewById(R.id.click_comment);
-                    rl_comment = (RelativeLayout) findViewById(R.id.rl_comment);
-
                     detial_gridview = (NoScrollGridView) findViewById(R.id.detial_gridview);
                     head_pic = (CircleImageView) findViewById(R.id.head_pic);
                     detial_description = (TextView) findViewById(R.id.detial_description);
@@ -131,6 +116,42 @@ public class detial_info extends Activity implements View.OnClickListener {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
                 dialog.dismiss();
+            }
+        });
+        BmobQuery<Comment> query_comment = new BmobQuery<Comment>();
+        query_comment.addWhereEqualTo("post", new BmobPointer(post));
+        // 按时间降序查询
+        query_comment.order("-createdAt");
+        //希望查询该评论的发布者的信息，这里用到上面`include`的并列对象查询和内嵌对象的查询
+        query_comment.include("author");
+        query_comment.findObjects(new FindListener<Comment>() {
+            @Override
+            public void done(List<Comment> objects, BmobException e) {
+                if (e == null) {
+                    // 为评论列表设置适配器
+                    comment_list.setAdapter(adapterComment);
+                    comment = (ImageView) findViewById(R.id.comment_pic);
+                    hide_down = (TextView) findViewById(R.id.hide_down);
+                    comment_board = (TextView) findViewById(R.id.comment_board);
+                    comment_content = (EditText) findViewById(R.id.comment_content);
+                    comment_send = (Button) findViewById(R.id.comment_send);
+
+                    rl_enroll = (LinearLayout) findViewById(R.id.bottom4);
+                    click_comment = (LinearLayout) findViewById(R.id.click_comment);
+                    rl_comment = (RelativeLayout) findViewById(R.id.rl_comment);
+
+                    if (objects.size() > 0) {
+                        for (Comment td : objects) {
+                            data.add(td);
+                        }
+                        setListViewHeightBasedOnChildren(comment_list);
+                        adapterComment.notifyDataSetChanged();
+                    } else {
+                        //暂时没人评论
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 setListener();
             }
         });
@@ -182,30 +203,35 @@ public class detial_info extends Activity implements View.OnClickListener {
         if (comment_content.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "评论不能为空！", Toast.LENGTH_SHORT).show();
         } else {
-            String comment_time = "两天前";
-            String name = "谢柏基";
-            String avatar = "http://img.my.csdn.net/uploads/201410/19/1413698837_7507.jpg";
-            // 生成评论数据
-            Comment comment = new Comment();
-            comment.setName("评论者" + (data.size() + 1));
-            comment.setAvatar(avatar);
-            comment.setCommentTime("1分钟前");
+            MyUser user = BmobUser.getCurrentUser(MyUser.class);
+            final Comment comment = new Comment();
+            comment.setAuthor(user);
+            comment.setPost(post);
             comment.setContent(comment_content.getText().toString());
-            data.add(0, comment);
-            setListViewHeightBasedOnChildren(comment_list);
-            adapterComment.notifyDataSetChanged();
-            //adapterComment.addComment(comment);
-            // 发送完，清空输入框
-            comment_content.setText("");
-            rl_enroll.setVisibility(View.VISIBLE);
-            rl_comment.setVisibility(View.GONE);
-            InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.hideSoftInputFromWindow(comment_content.getWindowToken(), 0);
-            comment_board.setFocusable(true);
-            comment_board.setFocusableInTouchMode(true);
-            comment_board.requestFocus();
-            comment_board.requestFocusFromTouch();
-            Toast.makeText(getApplicationContext(), "评论成功！", Toast.LENGTH_SHORT).show();
+            comment.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        data.add(0, comment);
+                        setListViewHeightBasedOnChildren(comment_list);
+                        adapterComment.notifyDataSetChanged();
+                        //adapterComment.addComment(comment);
+                        // 发送完，清空输入框
+                        comment_content.setText("");
+                        rl_enroll.setVisibility(View.VISIBLE);
+                        rl_comment.setVisibility(View.GONE);
+                        InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        im.hideSoftInputFromWindow(comment_content.getWindowToken(), 0);
+                        comment_board.setFocusable(true);
+                        comment_board.setFocusableInTouchMode(true);
+                        comment_board.requestFocus();
+                        comment_board.requestFocusFromTouch();
+                        Toast.makeText(getApplicationContext(), "评论成功！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 

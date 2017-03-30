@@ -91,7 +91,7 @@ public class ListItemAdapter extends BaseAdapter {
                 .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
                 .cacheInMemory(true) // 内存缓存
                 .cacheOnDisk(true) // sdcard缓存
-                .bitmapConfig(Config.RGB_565)// 设置�?低配�?
+                .bitmapConfig(Config.RGB_565)// 设置低配
                 .build();//
         ImageLoader.getInstance().displayImage(itemEntity.getAvatar(), holder.iv_avatar, options);
         final ArrayList<String> imageUrls = itemEntity.getImageUrls();

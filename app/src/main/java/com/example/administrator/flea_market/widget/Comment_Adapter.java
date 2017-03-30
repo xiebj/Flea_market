@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.administrator.flea_market.R;
+import com.example.administrator.flea_market.bean.Comment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -59,9 +60,9 @@ public class Comment_Adapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         // 适配数据
-        holder.comment_name.setText(data.get(i).getName());
+        holder.comment_name.setText(data.get(i).getAuthor().getName());
         holder.comment_content.setText(data.get(i).getContent());
-        holder.comment_time.setText(data.get(i).getCommentTime());
+        holder.comment_time.setText(data.get(i).getCreatedAt());
         // 使用ImageLoader加载网络图片
         DisplayImageOptions options = new DisplayImageOptions.Builder()//
                 .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
@@ -70,7 +71,7 @@ public class Comment_Adapter extends BaseAdapter {
                 .cacheOnDisk(true) // sdcard缓存
                 .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
                 .build();//
-        ImageLoader.getInstance().displayImage(data.get(i).getAvatar(), holder.iv_avatar, options);
+        ImageLoader.getInstance().displayImage(data.get(i).getAuthor().getAvator().getFileUrl(), holder.iv_avatar, options);
         return convertView;
     }
 
