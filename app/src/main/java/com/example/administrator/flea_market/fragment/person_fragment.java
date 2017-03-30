@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.administrator.flea_market.R;
 import com.example.administrator.flea_market.activity.LoginActivity;
+import com.example.administrator.flea_market.activity.WelcomeActivity;
 import com.example.administrator.flea_market.activity.user_info;
 import com.example.administrator.flea_market.bean.MyUser;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -58,7 +59,7 @@ public class person_fragment extends Fragment {
             public void onClick(View view) {
                 myUser.logOut();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
+
             }
         });
         // 使用ImageLoader加载网络图片

@@ -14,10 +14,6 @@ import android.widget.TextView;
 
 import com.example.administrator.flea_market.R;
 
-
-/**
- * Created by Ly on 2016/10/4.
- */
 public class RefreshHeader extends LinearLayout {
 
     private TextView tv_pull_state;

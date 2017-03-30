@@ -2,7 +2,9 @@ package com.example.administrator.flea_market.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +23,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.flea_market.R;
+import com.example.administrator.flea_market.bean.MyGoods;
 import com.example.administrator.flea_market.home_widget.NoScrollGridView;
 import com.example.administrator.flea_market.widget.Comment;
 import com.example.administrator.flea_market.widget.Comment_Adapter;
+import com.example.administrator.flea_market.widget.CustomProgressDialog;
 import com.example.administrator.flea_market.widget.Detial_GridAdapter;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class detial_info extends Activity implements View.OnClickListener{
+import circleimageview.CircleImageView;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+
+public class detial_info extends Activity implements View.OnClickListener {
     private NoScrollGridView detial_gridview;
     private ListView comment_list;
     private Comment_Adapter adapterComment;
@@ -39,19 +50,32 @@ public class detial_info extends Activity implements View.OnClickListener{
     private TextView comment_board;
     private EditText comment_content;
     private Button comment_send;
-
+    private String object_id;
     private LinearLayout rl_enroll;
     private LinearLayout click_comment;
     private RelativeLayout rl_comment;
+    private CircleImageView head_pic;
+    private TextView author_name;
+    private TextView detial_price;
+    private TextView detial_description;
+    private TextView price_logo;
+    private ArrayList<String> urls;
+    private MyGoods post;
+    private CustomProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detial_info);
+        object_id = getIntent().getStringExtra("object_id");
+        //从服务器返回数据前先显示加载动画
+        dialog =new CustomProgressDialog(this, "正在加载中",R.anim.frame);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
         // 初始化评论列表
         comment_list = (ListView) findViewById(R.id.comment_list);
         // 初始化数据
         data = new ArrayList<>();
-        for (int i = 0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             String content = "感觉这货还不错呀~~~";
             String comment_time = "两天前";
             String name = "谢柏基";
@@ -61,34 +85,62 @@ public class detial_info extends Activity implements View.OnClickListener{
         }
         // 初始化适配器
         adapterComment = new Comment_Adapter(getApplicationContext(), data);
-        // 为评论列表设置适配器
-        comment_list.setAdapter(adapterComment);
-        setListViewHeightBasedOnChildren(comment_list);
-        detial_gridview = (NoScrollGridView) findViewById(R.id.detial_gridview);
-        // 3.3张图片
-        ArrayList<String> urls = new ArrayList<String>();
-        urls.add("http://img.my.csdn.net/uploads/201410/19/1413698883_5877.jpg");
-        urls.add("http://img.my.csdn.net/uploads/201410/19/1413698867_8323.jpg");
-        urls.add("http://img.my.csdn.net/uploads/201410/19/1413698837_5654.jpg");
-        detial_gridview.setAdapter(new Detial_GridAdapter(this, urls));
+        BmobQuery<MyGoods> query = new BmobQuery<MyGoods>();
+        query.include("author");//缺少该关联查询则无法获取到user
+        //
+        query.getObject(object_id, new QueryListener<MyGoods>() {
+            @Override
+            public void done(MyGoods object, BmobException e) {
+                if (e == null) {
+                    // 为评论列表设置适配器
+                    comment_list.setAdapter(adapterComment);
+                    setListViewHeightBasedOnChildren(comment_list);
+                    comment = (ImageView) findViewById(R.id.comment_pic);
+                    hide_down = (TextView) findViewById(R.id.hide_down);
+                    comment_board = (TextView) findViewById(R.id.comment_board);
+                    comment_content = (EditText) findViewById(R.id.comment_content);
+                    comment_send = (Button) findViewById(R.id.comment_send);
 
-        comment = (ImageView) findViewById(R.id.comment_pic);
-        hide_down = (TextView) findViewById(R.id.hide_down);
-        comment_board = (TextView) findViewById(R.id.comment_board);
-        comment_content = (EditText) findViewById(R.id.comment_content);
-        comment_send = (Button) findViewById(R.id.comment_send);
+                    rl_enroll = (LinearLayout) findViewById(R.id.bottom4);
+                    click_comment = (LinearLayout) findViewById(R.id.click_comment);
+                    rl_comment = (RelativeLayout) findViewById(R.id.rl_comment);
 
-        rl_enroll = (LinearLayout) findViewById(R.id.bottom4);
-        click_comment = (LinearLayout) findViewById(R.id.click_comment);
-        rl_comment = (RelativeLayout) findViewById(R.id.rl_comment);
+                    detial_gridview = (NoScrollGridView) findViewById(R.id.detial_gridview);
+                    head_pic = (CircleImageView) findViewById(R.id.head_pic);
+                    detial_description = (TextView) findViewById(R.id.detial_description);
+                    detial_price = (TextView) findViewById(R.id.detial_price);
+                    author_name = (TextView) findViewById(R.id.detial_name);
+                    price_logo = (TextView) findViewById(R.id.price_logo);
 
-        setListener();
+                    detial_description.setText(object.getDescription());
+                    detial_price.setText(String.valueOf(object.getPrice()));
+                    author_name.setText(object.getAuthor().getName());
+                    price_logo.setText("¥");
+                    // 使用ImageLoader加载网络图片
+                    DisplayImageOptions options = new DisplayImageOptions.Builder()//
+                            .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
+                            .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
+                            .cacheInMemory(true) // 内存缓存
+                            .cacheOnDisk(true) //
+                            .build();//
+                    ImageLoader.getInstance().displayImage(object.getAuthor().getAvator().getFileUrl(), head_pic, options);
+                    urls = new ArrayList<String>();
+                    urls = (ArrayList<String>) object.getUrls();
+                    detial_gridview.setAdapter(new Detial_GridAdapter(detial_info.this, urls));
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+                dialog.dismiss();
+                setListener();
+            }
+        });
+
     }
 
     /**
      * 设置监听
      */
-    public void setListener(){
+    public void setListener() {
         click_comment.setOnClickListener(this);
         hide_down.setOnClickListener(this);
         comment_send.setOnClickListener(this);
@@ -112,7 +164,7 @@ public class detial_info extends Activity implements View.OnClickListener{
                 rl_enroll.setVisibility(View.VISIBLE);
                 rl_comment.setVisibility(View.GONE);
                 // 隐藏输入法，然后暂存当前输入框的内容，方便下次使用
-                InputMethodManager im = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(comment_content.getWindowToken(), 0);
                 break;
             case R.id.comment_send:
@@ -126,10 +178,10 @@ public class detial_info extends Activity implements View.OnClickListener{
     /**
      * 发送评论
      */
-    public void sendComment(){
-        if(comment_content.getText().toString().equals("")){
+    public void sendComment() {
+        if (comment_content.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "评论不能为空！", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             String comment_time = "两天前";
             String name = "谢柏基";
             String avatar = "http://img.my.csdn.net/uploads/201410/19/1413698837_7507.jpg";
@@ -147,7 +199,7 @@ public class detial_info extends Activity implements View.OnClickListener{
             comment_content.setText("");
             rl_enroll.setVisibility(View.VISIBLE);
             rl_comment.setVisibility(View.GONE);
-            InputMethodManager im = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             im.hideSoftInputFromWindow(comment_content.getWindowToken(), 0);
             comment_board.setFocusable(true);
             comment_board.setFocusableInTouchMode(true);
@@ -175,7 +227,7 @@ public class detial_info extends Activity implements View.OnClickListener{
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
@@ -205,6 +257,7 @@ public class detial_info extends Activity implements View.OnClickListener{
         // params.height最后得到整个ListView完整显示需要的高度
         gridView.setLayoutParams(params);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -64,6 +64,10 @@
             android:name=".activity.EditUser"
             android:label="@string/title_activity_edit_user" >
         </activity>
+        <activity
+            android:name=".activity.other_user_info"
+            android:label="@string/title_activity_other_user_info" >
+        </activity>
     </application>
 
 </manifest>

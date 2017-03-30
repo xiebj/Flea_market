@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/refresh_footer_height"
             android:gravity="center"
-            android:text="上拉刷新" />
+            android:text="上滑加载" />
 
 
         <LinearLayout

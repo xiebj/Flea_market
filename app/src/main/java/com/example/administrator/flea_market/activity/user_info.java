@@ -2,6 +2,7 @@ package com.example.administrator.flea_market.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -59,7 +60,7 @@ public class user_info extends Activity {
     private BmobFile avator;//用于存放头像文件
     private Boolean sex;//性别，true为男，false为女
     private Integer school_place;//所在校区，1代表南校、2代表东校、3代表珠海、4代表北校
-
+    ProgressDialog progressDialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,6 +192,20 @@ public class user_info extends Activity {
                 if (name == null || sex == null || school_place == null) {
                     Toast.makeText(user_info.this, "请填写完整", Toast.LENGTH_SHORT).show();
                 } else {
+                    //创建ProgressDialog对象
+                    progressDialog = new ProgressDialog(user_info.this);
+                    // 设置进度条风格，风格为圆形，旋转的
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    // 设置ProgressDialog 标题
+                    progressDialog.setTitle("提示");
+                    // 设置ProgressDialog 提示信息
+                    progressDialog.setMessage("正在提交，请等候");
+                    // 设置ProgressDialog 的进度条是否不明确
+                    progressDialog.setIndeterminate(false);
+                    // 设置ProgressDialog 是否可以按退回按键取消
+                    progressDialog.setCancelable(false);
+                    // 让ProgressDialog显示
+                    progressDialog.show();
                     String filename = name + "_avator";
                     //avator = new BmobFile(filename, null, new File(pathImage).toString());
                     //bmobfile需要上传之后成功了再保存进user中，否则是一个空文件
@@ -210,17 +225,20 @@ public class user_info extends Activity {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
+                                            progressDialog.dismiss();
                                             Toast.makeText(user_info.this, "修改资料成功", Toast.LENGTH_SHORT).show();
                                             Intent intent1 = new Intent();
                                             intent1.setAction("renew_user_info");
                                             sendBroadcast(intent1);
                                             finish();
                                         } else {
+                                            progressDialog.dismiss();
                                             Toast.makeText(user_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             } else {
+                                progressDialog.dismiss();
                                 Toast.makeText(user_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

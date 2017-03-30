@@ -54,6 +54,7 @@ public class NoScrollGridAdapter extends BaseAdapter {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
+                .showImageOnLoading(R.drawable.ic_launcher)
                 .bitmapConfig(Config.RGB_565)
                 .build();
         ImageLoader.getInstance().displayImage(imageUrls.get(position), imageView, options);

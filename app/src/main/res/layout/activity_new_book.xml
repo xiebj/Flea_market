@@ -64,6 +64,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_title"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -95,6 +96,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_number"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -194,11 +196,12 @@
                 android:paddingLeft="8dp">
 
                 <EditText
+                    android:id="@+id/post_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="center_vertical"
-                    android:hint="选填，说说你和这本书的故事吧(120字数限制)"
+                    android:hint="说说你和这本书的故事吧(120字数限制)"
                     android:maxLength="120"
                     android:paddingBottom="4dp"
                     android:paddingLeft="4dp"
@@ -255,6 +258,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_price"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -286,6 +290,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_old_price"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -317,6 +322,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_phone"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -348,6 +354,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/post_place"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
@@ -368,6 +375,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/forward_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

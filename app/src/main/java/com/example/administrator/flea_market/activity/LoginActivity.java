@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -32,7 +33,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private EditText passwordtext;
     private String user;
     private String password;
-
+    private Button login_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +41,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         progressBar = (ProgressBar) findViewById(R.id.progress);
         username = (EditText) findViewById(R.id.username);
         passwordtext = (EditText) findViewById(R.id.password);
-        (findViewById(R.id.login_button)).setOnClickListener(this);
+        login_btn = (Button) findViewById(R.id.login_button);
+        login_btn.setOnClickListener(this);
     }
 
     @Override

@@ -9,10 +9,6 @@ import android.widget.TextView;
 
 import com.example.administrator.flea_market.R;
 
-
-/**
- * Created by Ly on 2016/10/4.
- */
 public class RefreshFooter extends LinearLayout {
 
     private TextView tv_load_state;
@@ -69,7 +65,7 @@ public class RefreshFooter extends LinearLayout {
         switch (state) {
             case PULL_TO_LOAD_MORE:
                 if (mState != PULL_TO_LOAD_MORE) {
-                    tv_load_state.setText("上拉加载");
+                    //tv_load_state.setText("上滑加载");
                 }
                 break;
 

@@ -35,6 +35,10 @@ public class ListItemAdapter extends BaseAdapter {
         this.items = items;
     }
 
+    public void add(ItemEntity temp) {
+        items.add(temp);
+    }
+
     @Override
     public int getCount() {
         return items == null ? 0 : items.size();
@@ -63,24 +67,24 @@ public class ListItemAdapter extends BaseAdapter {
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.tv_content = (TextView) convertView.findViewById(R.id.description);
             holder.gridview = (NoScrollGridView) convertView.findViewById(R.id.gridview);
-
-            holder.iv_avatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mContext, user_info.class);
-                    mContext.startActivity(intent);
-                }
-            });
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        ItemEntity itemEntity = items.get(position);
+        final ItemEntity itemEntity = items.get(position);
         holder.tv_title.setText(itemEntity.getTitle());
         holder.place.setText(itemEntity.getPlace());
         holder.name.setText(itemEntity.getName());
         holder.price.setText(itemEntity.getPrice());
         holder.tv_content.setText(itemEntity.getContent());
+        holder.iv_avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, user_info.class);
+                intent.putExtra("object_id", itemEntity.getObject_id());
+                mContext.startActivity(intent);
+            }
+        });
         // 使用ImageLoader加载网络图片
         DisplayImageOptions options = new DisplayImageOptions.Builder()//
                 .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片

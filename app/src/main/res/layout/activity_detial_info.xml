@@ -50,7 +50,6 @@
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@mipmap/ic_launcher"
                     app:border_color="#ccc"
                     app:border_width="1dp"
                     />
@@ -67,14 +66,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="25dp"
                         android:gravity="center_vertical"
-                        android:text="谢柏基"
                         android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/detial_school"
                         android:layout_width="match_parent"
                         android:layout_height="17dp"
-                        android:text="数据科学与计算机学院"
                         android:textSize="11sp"/>
                 </LinearLayout>
 
@@ -86,11 +83,11 @@
                     >
 
                     <TextView
+                        android:id="@+id/price_logo"
                         android:layout_width="0dp"
                         android:layout_height="42dp"
                         android:layout_weight="3"
                         android:gravity="center"
-                        android:text="¥"
                         android:textSize="15sp"/>
 
                     <TextView
@@ -99,7 +96,6 @@
                         android:layout_height="42dp"
                         android:layout_weight="4"
                         android:gravity="center"
-                        android:text="58"
                         android:textSize="20sp"/>
                 </LinearLayout>
             </LinearLayout>
@@ -111,9 +107,9 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/detial_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="这张门票是今年1月份在网上买的，发票还在，3月25号的大学城演唱会，因为最后有事情无法参加，特此转让，下面有发票图。"
                     android:textSize="13sp"
                     />
 

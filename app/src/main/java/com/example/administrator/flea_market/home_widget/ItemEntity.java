@@ -14,7 +14,11 @@ public class ItemEntity {
     private String content; //内容
     private String place; //所在校区
     private ArrayList<String> imageUrls; // 图片的URL集合
+    private String object_id;
 
+    public ItemEntity() {
+        super();
+    }
     public ItemEntity(String avatar, String title, String price, String name, String content, String place, ArrayList<String> imageUrls) {
         super();
         this.avatar = avatar;
@@ -24,6 +28,14 @@ public class ItemEntity {
         this.price = price;
         this.content = content;
         this.imageUrls = imageUrls;
+    }
+
+    public String getObject_id() {
+        return object_id;
+    }
+
+    public void setObject_id(String object_id) {
+        this.object_id = object_id;
     }
 
     public String getAvatar() {

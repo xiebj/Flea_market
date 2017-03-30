@@ -2,6 +2,7 @@ package com.example.administrator.flea_market.new_widget;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -24,13 +26,19 @@ import android.widget.Toast;
 
 import com.example.administrator.flea_market.R;
 import com.example.administrator.flea_market.activity.MainActivity;
+import com.example.administrator.flea_market.activity.detial_info;
 import com.example.administrator.flea_market.bean.MyGoods;
 import com.example.administrator.flea_market.bean.MyUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 
 public class new_book extends Activity {
     private GridView gridView1;    //网格显示缩略图
@@ -40,15 +48,34 @@ public class new_book extends Activity {
     private ArrayList<HashMap<String, Object>> imageItem;
     private SimpleAdapter simpleAdapter;     //适配器
 
+    private EditText edit_description;
+    private EditText edit_title;
+    private EditText edit_number;
+    private EditText edit_price;
+    private EditText edit_old_price;
+    private EditText edit_phone;
+    private EditText edit_place;
     private EditText edit_school;
     private EditText edit_rank;
     PopupMenu popup = null;
     PopupMenu popup2 = null;
+    ProgressDialog progressDialog = null;
+    private Button forward_btn;
 
     private MyUser myUser;
     private String object_id;
     private String type;
+    private String title;
+    private String description;
+    private Integer number;
+    private String book_school;
+    private String rank;
+    private Integer price;
+    private Integer old_price;
+    private String phone;
+    private String place;
     private MyGoods post;
+    private ArrayList<String> pic_urls;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +86,14 @@ public class new_book extends Activity {
         myUser = BmobUser.getCurrentUser(MyUser.class);
         edit_school = (EditText) findViewById(R.id.editschool);
         edit_rank = (EditText) findViewById(R.id.editrank);
+        edit_title = (EditText) findViewById(R.id.post_title);
+        edit_description = (EditText) findViewById(R.id.post_description);
+        edit_number = (EditText) findViewById(R.id.post_number);
+        edit_price = (EditText) findViewById(R.id.post_price);
+        edit_old_price = (EditText) findViewById(R.id.post_old_price);
+        edit_phone = (EditText) findViewById(R.id.post_phone);
+        edit_place = (EditText) findViewById(R.id.post_place);
+        forward_btn = (Button) findViewById(R.id.forward_btn);
         //院系选项，用了popupMenu弹出菜单
         edit_school.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +134,7 @@ public class new_book extends Activity {
          */
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.gridview_addpic); //加号
         imageItem = new ArrayList<HashMap<String, Object>>();
+        pic_urls = new ArrayList<String>();
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("itemImage", bmp);
         imageItem.add(map);
@@ -151,6 +187,92 @@ public class new_book extends Activity {
 
             }
         });
+
+        forward_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            //之后添加等待进度圆圈
+            public void onClick(View view) {
+                title = edit_title.getText().toString();
+                number = Integer.valueOf(edit_number.getText().toString());
+                book_school = edit_school.getText().toString();
+                rank = edit_rank.getText().toString();
+                description = edit_description.getText().toString();
+                price = Integer.valueOf(edit_price.getText().toString());
+                old_price = Integer.valueOf(edit_old_price.getText().toString());
+                phone = edit_phone.getText().toString();
+                place = edit_place.getText().toString();
+                if (title == null || number == null || book_school == null || rank == null || description == null || price == null || old_price == null || phone == null || place == null) {
+                    Toast.makeText(new_book.this, "请填写完整", Toast.LENGTH_SHORT).show();
+                } else {
+                    //创建ProgressDialog对象
+                    progressDialog = new ProgressDialog(new_book.this);
+                    // 设置进度条风格，风格为圆形，旋转的
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    // 设置ProgressDialog 标题
+                    progressDialog.setTitle("提示");
+                    // 设置ProgressDialog 提示信息
+                    progressDialog.setMessage("正在提交，请等候");
+                    // 设置ProgressDialog 的进度条是否不明确
+                    progressDialog.setIndeterminate(false);
+                    // 设置ProgressDialog 是否可以按退回按键取消
+                    progressDialog.setCancelable(false);
+                    // 让ProgressDialog显示
+                    progressDialog.show();
+                    String[] urls = pic_urls.toArray(new String[pic_urls.size()]);
+                    post = new MyGoods();
+                    BmobFile.uploadBatch(urls, new UploadBatchListener() {
+                        @Override
+                        public void onSuccess(List<BmobFile> list, List<String> list1) {
+                            //如果数量相等，则代表文件全部上传完成,此时再进行操作
+                            if (list1.size() == pic_urls.size()) {
+                                post.setUrls(list1);
+                                post.setAuthor(myUser);
+                                post.setType(1);
+                                post.setGood_type("教学书籍");
+                                post.setNumber(number);
+                                post.setBook_for_school(book_school);
+                                post.setRank(rank);
+                                post.setDescription(description);
+                                post.setPrice(price);
+                                post.setOld_price(old_price);
+                                post.setPhone(phone);
+                                post.setPlace(place);
+                                post.setTitle(title);
+                                post.save(new SaveListener<String>() {
+                                    @Override
+                                    public void done(String s, BmobException e) {
+                                        if (e == null) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(new_book.this, "发表成功", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent();
+                                            intent.setClass(new_book.this, detial_info.class);
+                                            intent.putExtra("object_id", s);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(new_book.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onProgress(int i, int i1, int i2, int i3) {
+
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+                            progressDialog.dismiss();
+                            Toast.makeText(new_book.this, s, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     //获取图片路径 响应startActivityForResult
@@ -175,6 +297,7 @@ public class new_book extends Activity {
                 cursor.moveToFirst();
                 pathImage = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Images.Media.DATA));
+                pic_urls.add(pathImage);
             }
         }  //end if 打开图片
     }
@@ -224,6 +347,8 @@ public class new_book extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 imageItem.remove(position);
+                //删除图片时也应该更新保存图片路径的数组,这里注意减1，因为它一开始啥都没保存
+                pic_urls.remove(position-1);
                 simpleAdapter.notifyDataSetChanged();
             }
         });
