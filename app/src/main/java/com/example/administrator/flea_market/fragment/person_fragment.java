@@ -24,6 +24,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import circleimageview.CircleImageView;
+import cn.bmob.newim.BmobIM;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -38,7 +39,7 @@ public class person_fragment extends Fragment {
     private CircleImageView person_avator;
     private LinearLayout layout;
     private MyUser myUser;
-
+    private BroadcastReceiver broadcastReceiver;
     public person_fragment() {
         // Required empty public constructor
     }
@@ -58,8 +59,12 @@ public class person_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 myUser.logOut();
+                //可断开连接
+                BmobIM.getInstance().disConnect();
+                //在此处对主activity进行广播注销，也需要声明onDestroy函数：super.onDestroy()
+                getActivity().unregisterReceiver(broadcastReceiver);
+                getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
-
             }
         });
         // 使用ImageLoader加载网络图片
@@ -82,6 +87,36 @@ public class person_fragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        broadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // TODO Auto-generated method stub
+                final String object_id = myUser.getObjectId();
+                BmobQuery<MyUser> query = new BmobQuery<MyUser>();
+                query.getObject(object_id, new QueryListener<MyUser>() {
+                    @Override
+                    public void done(MyUser object, BmobException e) {
+                        if (e == null) {
+                            show_name.setText(object.getName());
+                            // 使用ImageLoader加载网络图片
+                            DisplayImageOptions options = new DisplayImageOptions.Builder()//
+                                    .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
+                                    .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
+                                    .cacheInMemory(true) // 内存缓存
+                                    .cacheOnDisk(true) // sdcard缓存
+                                    .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
+                                    .build();//
+                            ImageLoader.getInstance().displayImage(object.getAvator().getFileUrl(), person_avator, options);
+                        } else {
+                            Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                        }
+                    }
+
+                });
+            }
+        };
         //为之后修改个人资料成功后给个人中心的ui做更新
         IntentFilter filter = new IntentFilter("renew_user_info");
         getActivity().registerReceiver(broadcastReceiver, filter);
@@ -89,37 +124,7 @@ public class person_fragment extends Fragment {
         return person_layout;
     }
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            final String object_id = myUser.getObjectId();
-            BmobQuery<MyUser> query = new BmobQuery<MyUser>();
-            query.getObject(object_id, new QueryListener<MyUser>() {
-                @Override
-                public void done(MyUser object, BmobException e) {
-                    if (e == null) {
-                        show_name.setText(object.getName());
-                        // 使用ImageLoader加载网络图片
-                        DisplayImageOptions options = new DisplayImageOptions.Builder()//
-                                .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
-                                .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
-                                .cacheInMemory(true) // 内存缓存
-                                .cacheOnDisk(true) // sdcard缓存
-                                .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
-                                .build();//
-                        ImageLoader.getInstance().displayImage(object.getAvator().getFileUrl(), person_avator, options);
-                    } else {
-                        Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                    }
-                }
-
-            });
-        }
-    };
-
     public void onDestroy() {
-        getActivity().unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }

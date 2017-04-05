@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.administrator.flea_market" >
+<manifest package="com.example.administrator.flea_market"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 允许联网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!-- 获取wifi网络状态的信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- 获取sd卡写的权限，用于文件上传和下载 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 允许读取手机状态 用于创建BmobInstallation -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--摄像头-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--录音-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--通知震动-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".home_widget.MyApplication"
@@ -22,52 +29,78 @@
         android:icon="@mipmap/ic_launcher"
         android:label="中大闲置"
         android:theme="@style/Theme.AppCompat.Light"
-        tools:replace="android:label" >
+        tools:replace="android:label">
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" >
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".new_widget.new_book"
-            android:label="@string/title_activity_new_book" >
+            android:label="@string/title_activity_new_book">
         </activity>
         <activity
             android:name=".new_widget.new_goods"
-            android:label="@string/title_activity_new_goods" >
+            android:label="@string/title_activity_new_goods">
         </activity>
         <activity
             android:name=".new_widget.new_skill"
-            android:label="@string/title_activity_new_skill" >
+            android:label="@string/title_activity_new_skill">
         </activity>
         <activity
             android:name=".activity.detial_info"
-            android:label="@string/title_activity_detial_info" >
+            android:label="@string/title_activity_detial_info">
         </activity>
         <activity
             android:name=".activity.user_info"
-            android:label="@string/title_activity_user_info" >
+            android:label="@string/title_activity_user_info">
         </activity>
         <activity
             android:name=".activity.WelcomeActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login">
         </activity>
         <activity
             android:name=".activity.EditUser"
-            android:label="@string/title_activity_edit_user" >
+            android:label="@string/title_activity_edit_user">
         </activity>
         <activity
             android:name=".activity.other_user_info"
-            android:label="@string/title_activity_other_user_info" >
+            android:label="@string/title_activity_other_user_info">
         </activity>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:label="chat">
+        </activity>
+        <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
+            <intent-filter>
+                <action android:name="cn.bmob.action.RECONNECT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="cn.bmob.newim.core.service.BmobIMService"
+            android:process=":bmobcore"/>
+        <service
+            android:name="cn.bmob.newim.core.service.NotifyService"
+            android:process=":bmobcore"/>
+        <service android:name="cn.bmob.newim.core.service.ReConnectService"/>
+        <service android:name="cn.bmob.newim.core.service.HeartBeatService"/>
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="d6a4e73ea1e724d552490f3e185a6ffc" />
     </application>
 
 </manifest>

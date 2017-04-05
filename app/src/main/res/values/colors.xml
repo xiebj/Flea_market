@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#309CDB</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
@@ -9,4 +9,14 @@
     <color name="grey">#ececec</color>
     <color name="txtgrey">#7c7b7b</color>
     <color name="greywhite">#aeacac</color>
+    <color name="color_line">#dadada</color>
+    <color name="color_emote_divder">#ffa1a1a1</color>
+    <color name="base_color_text_black">#3e3e39</color>
+    <color name="base_color_text_gray">#9fa0a0</color>
+    <color name="base_color_text_white">#ffffff</color>
+    <color name="color_1e1e1e">#1e1e1e</color>
+    <color name="lelele">#1e1e1e</color>
+    <color name="color_b4">#b4b4b4</color>
+    <color name="color_msg_system_time_bg">#20000000</color>
+    <color name="color_chat_send_status">#818181</color>
 </resources>

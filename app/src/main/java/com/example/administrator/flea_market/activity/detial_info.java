@@ -2,6 +2,7 @@ package com.example.administrator.flea_market.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,6 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import circleimageview.CircleImageView;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMConversation;
+import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
@@ -54,6 +58,7 @@ public class detial_info extends Activity implements View.OnClickListener {
     private TextView comment_board;
     private EditText comment_content;
     private Button comment_send;
+    private Button chat_btn;
     private String object_id;
     private LinearLayout rl_enroll;
     private LinearLayout click_comment;
@@ -66,6 +71,7 @@ public class detial_info extends Activity implements View.OnClickListener {
     private ArrayList<String> urls;
     private MyGoods post;
     private CustomProgressDialog dialog;
+    BmobIMUserInfo info;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +103,7 @@ public class detial_info extends Activity implements View.OnClickListener {
                     author_name = (TextView) findViewById(R.id.detial_name);
                     price_logo = (TextView) findViewById(R.id.price_logo);
 
+                    post.setAuthor(object.getAuthor());
                     detial_description.setText(object.getDescription());
                     detial_price.setText(String.valueOf(object.getPrice()));
                     author_name.setText(object.getAuthor().getName());
@@ -135,7 +142,7 @@ public class detial_info extends Activity implements View.OnClickListener {
                     comment_board = (TextView) findViewById(R.id.comment_board);
                     comment_content = (EditText) findViewById(R.id.comment_content);
                     comment_send = (Button) findViewById(R.id.comment_send);
-
+                    chat_btn = (Button) findViewById(R.id.chat_btn);
                     rl_enroll = (LinearLayout) findViewById(R.id.bottom4);
                     click_comment = (LinearLayout) findViewById(R.id.click_comment);
                     rl_comment = (RelativeLayout) findViewById(R.id.rl_comment);
@@ -165,6 +172,7 @@ public class detial_info extends Activity implements View.OnClickListener {
         click_comment.setOnClickListener(this);
         hide_down.setOnClickListener(this);
         comment_send.setOnClickListener(this);
+        chat_btn.setOnClickListener(this);
     }
 
     @Override
@@ -191,6 +199,17 @@ public class detial_info extends Activity implements View.OnClickListener {
             case R.id.comment_send:
                 sendComment();
                 break;
+            case R.id.chat_btn:
+                //构造聊天方的用户信息:传入用户id、用户名和用户头像三个参数
+                info = new BmobIMUserInfo(post.getAuthor().getObjectId(),post.getAuthor().getName(),post.getAuthor().getAvator().getFileUrl());
+                //启动一个会话，设置isTransient设置为false,则会在本地数据库的会话列表中先创建（如果没有）与该用户的会话信息，且将用户信息存储到本地的用户表中
+                BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info,false,null);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("c", c);
+                Intent intent = new Intent(detial_info.this, ChatActivity.class);
+                intent.putExtra("chat_user", bundle);
+                intent.putExtra("user_name", post.getAuthor().getName());
+                startActivity(intent);
             default:
                 break;
         }

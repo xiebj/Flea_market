@@ -18,64 +18,114 @@
         android:id="@+id/divide"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/activity_group_radioGroup"
+        android:layout_above="@+id/main_bottom"
         android:background="#cccccc"/>
 
-    <RadioGroup
-        android:id="@+id/activity_group_radioGroup"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
-        android:checkedButton="@+id/home"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="3dp"
-        android:paddingTop="3dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/home"
-            style="@style/main_tab_bottom"
-            android:layout_width="fill_parent"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:drawableTop="@drawable/main_tab_1"
-            android:gravity="center"
-            android:text="@string/home_name"/>
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/create"
-            style="@style/main_tab_bottom"
-            android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/main_tab_1"
+                android:background="@null"
+                android:onClick="onTabSelect"
+                android:paddingBottom="2dip"
+                android:paddingTop="7dip"
+                android:scaleType="matrix"
+                android:text="@string/home_name"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:checked="false"
-            android:drawableTop="@drawable/main_tab_2"
-            android:gravity="center"
-            android:text="@string/new_name"/>
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/message"
-            style="@style/main_tab_bottom"
-            android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/create"
+                style="@style/main_tab_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/main_tab_2"
+                android:background="@null"
+                android:onClick="onTabSelect"
+                android:paddingBottom="2dip"
+                android:paddingTop="7dip"
+                android:scaleType="matrix"
+                android:text="@string/new_name"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:checked="false"
-            android:drawableTop="@drawable/main_tab_3"
-            android:gravity="center"
-            android:text="@string/msg_name"/>
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/setting"
-            style="@style/main_tab_bottom"
-            android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/message"
+                style="@style/main_tab_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/main_tab_3"
+                android:background="@null"
+                android:onClick="onTabSelect"
+                android:paddingBottom="2dip"
+                android:paddingTop="7dip"
+                android:scaleType="matrix"
+                android:text="@string/msg_name"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/iv_conversion_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="7dp"
+                android:background="@mipmap/msg_tips"
+                android:contentDescription="@string/action_settings"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:checked="false"
-            android:drawableTop="@drawable/main_tab_4"
-            android:gravity="center"
-            android:text="@string/person_name"/>
-    </RadioGroup>
+            android:layout_weight="1">
 
+            <Button
+                android:id="@+id/setting"
+                style="@style/main_tab_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/main_tab_4"
+                android:background="@null"
+                android:onClick="onTabSelect"
+                android:paddingBottom="2dip"
+                android:paddingTop="7dip"
+                android:scaleType="matrix"
+                android:text="@string/person_name"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
