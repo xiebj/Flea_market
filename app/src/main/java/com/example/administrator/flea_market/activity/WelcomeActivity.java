@@ -50,7 +50,7 @@ public class WelcomeActivity extends Activity {
         Bmob.initialize(this, MyConfig.APP_ID);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
-        myuser = BmobUser.getCurrentUser(MyUser.class);
+        myuser = BmobUser.getCurrentUser(this, MyUser.class);
         //若资料未完善需登录进一步完善，只有登陆后完善资料者可享有功能
         if(myuser == null || myuser.getName() == null){
             mHandler.sendEmptyMessageDelayed(LOGIN,2000);

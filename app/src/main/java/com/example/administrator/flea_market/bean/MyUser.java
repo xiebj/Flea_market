@@ -14,7 +14,7 @@ public class MyUser extends BmobUser implements Serializable {
     private BmobFile avator;//用于存放头像文件
     private Boolean sex;//性别，true为男，false为女
     private Integer school_place;//所在校区，1代表南校、2代表东校、3代表珠海、4代表北校
-
+    private String url;
     public void setName(String name) {
         this.name = name;
     }
@@ -45,5 +45,12 @@ public class MyUser extends BmobUser implements Serializable {
 
     public Integer getSchool_place() {
         return this.school_place;
+    }
+
+    public void setAvatorUrl(String url) {
+        this.url = url;
+    }
+    public String getAvatorUrl() {
+        return url;
     }
 }

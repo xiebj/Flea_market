@@ -83,7 +83,7 @@ public class new_book extends Activity {
         Intent i = getIntent();
         object_id = i.getStringExtra("object_id");
         type = i.getStringExtra("type");
-        myUser = BmobUser.getCurrentUser(MyUser.class);
+        myUser = BmobUser.getCurrentUser(this, MyUser.class);
         edit_school = (EditText) findViewById(R.id.editschool);
         edit_rank = (EditText) findViewById(R.id.editrank);
         edit_title = (EditText) findViewById(R.id.post_title);
@@ -220,7 +220,7 @@ public class new_book extends Activity {
                     progressDialog.show();
                     String[] urls = pic_urls.toArray(new String[pic_urls.size()]);
                     post = new MyGoods();
-                    BmobFile.uploadBatch(urls, new UploadBatchListener() {
+                    BmobFile.uploadBatch(new_book.this, urls, new UploadBatchListener() {
                         @Override
                         public void onSuccess(List<BmobFile> list, List<String> list1) {
                             //如果数量相等，则代表文件全部上传完成,此时再进行操作
@@ -238,21 +238,22 @@ public class new_book extends Activity {
                                 post.setPhone(phone);
                                 post.setPlace(place);
                                 post.setTitle(title);
-                                post.save(new SaveListener<String>() {
+                                post.save(new_book.this, new SaveListener() {
                                     @Override
-                                    public void done(String s, BmobException e) {
-                                        if (e == null) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(new_book.this, "发表成功", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent();
-                                            intent.setClass(new_book.this, detial_info.class);
-                                            intent.putExtra("object_id", s);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(new_book.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
+                                    public void onSuccess() {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(new_book.this, "发表成功", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent();
+                                        intent.setClass(new_book.this, detial_info.class);
+                                        intent.putExtra("object_id", post.getObjectId());
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(int code, String arg0) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(new_book.this, arg0, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

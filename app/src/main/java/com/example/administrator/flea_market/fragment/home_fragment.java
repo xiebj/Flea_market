@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.administrator.flea_market.R;
 import com.example.administrator.flea_market.activity.detial_info;
 import com.example.administrator.flea_market.bean.MyGoods;
+import com.example.administrator.flea_market.bean.MyUser;
 import com.example.administrator.flea_market.home_widget.ItemEntity;
 import com.example.administrator.flea_market.home_widget.ListItemAdapter;
 
@@ -160,72 +161,72 @@ public class home_fragment extends Fragment implements RefreshListViewListener, 
         // 设置每页数据个数
         query.setLimit(limit);
         // 查找数据
-        query.findObjects(new FindListener<MyGoods>() {
+        query.findObjects(getActivity(), new FindListener<MyGoods>() {
             @Override
-            public void done(List<MyGoods> list, BmobException e) {
-                if (e == null) {
-                    if (list.size() > 0) {
-                        if (actionType == STATE_REFRESH) {
-                            // 当是下拉刷新操作时，将当前页的编号重置为0，并把itemEntities清空，重新添加
-                            curPage = 0;
-                            itemEntities.clear();
-                            // 获取最后时间
-                            lastTime = list.get(list.size() - 1).getCreatedAt();
-                            //下拉刷新有数据，说明上拉加载更多可能有数据，因此激活上拉加载，之后要加判断，这里用户体验不好
-                            mListView.setLoadMoreEnable(true);
-                        }
-
-                        // 将本次查询的数据添加到itemEntities中
-                        for (MyGoods td : list) {
-                            urls = (ArrayList<String>) td.getUrls();
-                            //如果不重新new一个类的话，一直保留的都是对原有变量的引用，导致值重复
-                            ItemEntity itemEntity = new ItemEntity();
-                            itemEntity.setImageUrls(urls);
-                            itemEntity.setTitle(td.getTitle());
-                            itemEntity.setAvatar(td.getAuthor().getAvator().getFileUrl());
-                            itemEntity.setContent(td.getDescription());
-                            itemEntity.setName(td.getAuthor().getName());
-                            itemEntity.setPrice(td.getPrice().toString() + "元");
-                            itemEntity.setPlace(td.getPlace());
-                            itemEntity.setObject_id(td.getObjectId());
-                            adapter.add(itemEntity);
-                        }
-
-                        // 这里在每次加载完数据后，将当前页码+1，这样在上拉刷新的onPullUpToRefresh方法中就不需要操作curPage了
-                        curPage++;
+            public void onSuccess(List<MyGoods> list) {
+                if (list.size() > 0) {
+                    if (actionType == STATE_REFRESH) {
+                        // 当是下拉刷新操作时，将当前页的编号重置为0，并把itemEntities清空，重新添加
+                        curPage = 0;
+                        itemEntities.clear();
+                        // 获取最后时间
                         lastTime = list.get(list.size() - 1).getCreatedAt();
-                        if (actionType == STATE_REFRESH) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mListView.stopRefresh();
-                                }
-                            });
-                        } else {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mListView.stopLoadMore();
-                                }
-                            });
-                        }
-                    } else if (actionType == STATE_MORE) {
+                        //下拉刷新有数据，说明上拉加载更多可能有数据，因此激活上拉加载，之后要加判断，这里用户体验不好
+                        mListView.setLoadMoreEnable(true);
+                    }
+
+                    // 将本次查询的数据添加到itemEntities中
+                    for (MyGoods td : list) {
+                        urls = (ArrayList<String>) td.getUrls();
+                        //如果不重新new一个类的话，一直保留的都是对原有变量的引用，导致值重复
+                        ItemEntity itemEntity = new ItemEntity();
+                        itemEntity.setImageUrls(urls);
+                        itemEntity.setTitle(td.getTitle());
+                        itemEntity.setAvatar(td.getAuthor().getAvator().getFileUrl(getActivity()));
+                        itemEntity.setContent(td.getDescription());
+                        itemEntity.setName(td.getAuthor().getName());
+                        itemEntity.setPrice(td.getPrice().toString() + "元");
+                        itemEntity.setPlace(td.getPlace());
+                        itemEntity.setObject_id(td.getObjectId());
+                        adapter.add(itemEntity);
+                    }
+
+                    // 这里在每次加载完数据后，将当前页码+1，这样在上拉刷新的onPullUpToRefresh方法中就不需要操作curPage了
+                    curPage++;
+                    lastTime = list.get(list.size() - 1).getCreatedAt();
+                    if (actionType == STATE_REFRESH) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mListView.stopLoadMoreForNoDatas();
+                                mListView.stopRefresh();
                             }
                         });
-                        showToast("没有更多数据了");
-
-                    } else if (actionType == STATE_REFRESH) {
-                        showToast("没有数据");
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mListView.stopLoadMore();
+                            }
+                        });
                     }
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                } else {
-                    showToast("查询失败:" + e.getMessage());
+                } else if (actionType == STATE_MORE) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListView.stopLoadMoreForNoDatas();
+                        }
+                    });
+                    showToast("没有更多数据了");
+
+                } else if (actionType == STATE_REFRESH) {
+                    showToast("没有数据");
                 }
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+            @Override
+            public void onError(int code, String msg) {
+                showToast("查询失败:" + msg);
             }
         });
     }

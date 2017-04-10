@@ -49,6 +49,7 @@ public class EditUser extends Activity {
     private RadioGroup radio_school;
     private String object_id;
     private String pathImage;
+    private String url;
     private String name;//用户昵称
     private BmobFile avator;//用于存放头像文件
     private Boolean sex;//性别，true为男，false为女
@@ -159,36 +160,45 @@ public class EditUser extends Activity {
                     newUser.setName(name);
                     newUser.setSex(sex);
                     newUser.setSchool_place(school_place);
-                    String filename = name + "_avator";
                     //avator = new BmobFile(filename, null, new File(pathImage).toString());
                     //bmobfile需要上传之后成功了再保存进user中，否则是一个空文件
                     avator = new BmobFile(new File(pathImage));
-                    avator.upload(new UploadFileListener() {
+                    avator.uploadblock(EditUser.this, new UploadFileListener() {
                         @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                newUser.setAvator(avator);
-                                newUser.update(object_id, new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        if (e == null) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(EditUser.this, "完善资料成功", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent();
-                                            intent.putExtra("object_id", object_id);
-                                            intent.setClass(EditUser.this, MainActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(EditUser.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(EditUser.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                        public void onSuccess() {
+                            //bmobFile.getFileUrl(context)--返回的上传文件的完整地址
+                            url = avator.getFileUrl(EditUser.this);
+                            newUser.setAvator(avator);
+                            newUser.setAvatorUrl(url);
+                            newUser.update(EditUser.this, object_id, new UpdateListener() {
+                                @Override
+                                public void onSuccess() {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(EditUser.this, "完善资料成功", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("object_id", object_id);
+                                    intent.setClass(EditUser.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(EditUser.this, msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onProgress(Integer value) {
+                            // 返回的上传进度（百分比）
+                        }
+
+                        @Override
+                        public void onFailure(int code, String msg) {
+                            progressDialog.dismiss();
+                            Toast.makeText(EditUser.this, msg, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

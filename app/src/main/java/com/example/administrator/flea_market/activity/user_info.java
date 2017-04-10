@@ -34,7 +34,7 @@ import circleimageview.CircleImageView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -82,44 +82,43 @@ public class user_info extends Activity {
         school4 = (RadioButton) findViewById(R.id.north);
         //先获取原始资料。这里需要调用bmob的查询
         BmobQuery<MyUser> query = new BmobQuery<MyUser>();
-        query.getObject(object_id, new QueryListener<MyUser>() {
-
+        query.getObject(this, object_id, new GetListener<MyUser>() {
             @Override
-            public void done(MyUser object, BmobException e) {
-                if (e == null) {
-                    name = object.getName();
-                    avator = object.getAvator();
-                    sex = object.getSex();
-                    school_place = object.getSchool_place();
-                    edit_name.setText(name);
-                    if (sex) {
-                        male.setChecked(true);
-                    } else {
-                        female.setChecked(true);
-                    }
-                    if (school_place == 1) {
-                        school1.setChecked(true);
-                    } else if (school_place == 2) {
-                        school2.setChecked(true);
-                    } else if (school_place == 3) {
-                        school3.setChecked(true);
-                    } else if (school_place == 4) {
-                        school4.setChecked(true);
-                    }
-                    // 使用ImageLoader加载网络图片
-                    DisplayImageOptions options = new DisplayImageOptions.Builder()//
-                            .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
-                            .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
-                            .cacheInMemory(true) // 内存缓存
-                            .cacheOnDisk(true) // sdcard缓存
-                            .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
-                            .build();//
-                    ImageLoader.getInstance().displayImage(avator.getFileUrl(), person_pic, options);
+            public void onSuccess(MyUser object) {
+                name = object.getName();
+                avator = object.getAvator();
+                sex = object.getSex();
+                school_place = object.getSchool_place();
+                edit_name.setText(name);
+                if (sex) {
+                    male.setChecked(true);
                 } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    female.setChecked(true);
                 }
+                if (school_place == 1) {
+                    school1.setChecked(true);
+                } else if (school_place == 2) {
+                    school2.setChecked(true);
+                } else if (school_place == 3) {
+                    school3.setChecked(true);
+                } else if (school_place == 4) {
+                    school4.setChecked(true);
+                }
+                // 使用ImageLoader加载网络图片
+                DisplayImageOptions options = new DisplayImageOptions.Builder()//
+                        .showImageOnLoading(R.drawable.ic_launcher) // 加载中显示的默认图片
+                        .showImageOnFail(R.drawable.ic_launcher) // 设置加载失败的默认图�?
+                        .cacheInMemory(true) // 内存缓存
+                        .cacheOnDisk(true) // sdcard缓存
+                        .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
+                        .build();//
+                ImageLoader.getInstance().displayImage(avator.getFileUrl(user_info.this), person_pic, options);
             }
 
+            @Override
+            public void onFailure(int code, String arg0) {
+                Log.i("bmob", "失败：" + arg0);
+            }
         });
         radio_sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -212,35 +211,42 @@ public class user_info extends Activity {
                     if (pathImage != null) {
                         avator = new BmobFile(new File(pathImage));
                     }
-                    avator.upload(new UploadFileListener() {
+                    avator.upload(user_info.this, new UploadFileListener() {
                         @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                MyUser newUser = new MyUser();
-                                newUser.setName(name);
-                                newUser.setSex(sex);
-                                newUser.setSchool_place(school_place);
-                                newUser.setAvator(avator);
-                                newUser.update(object_id, new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        if (e == null) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(user_info.this, "修改资料成功", Toast.LENGTH_SHORT).show();
-                                            Intent intent1 = new Intent();
-                                            intent1.setAction("renew_user_info");
-                                            sendBroadcast(intent1);
-                                            finish();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(user_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(user_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                        public void onSuccess() {
+                            MyUser newUser = new MyUser();
+                            newUser.setName(name);
+                            newUser.setSex(sex);
+                            newUser.setSchool_place(school_place);
+                            newUser.setAvator(avator);
+                            newUser.setAvatorUrl(avator.getFileUrl(user_info.this));
+                            newUser.update(user_info.this, object_id, new UpdateListener() {
+                                public void onSuccess() {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(user_info.this, "修改资料成功", Toast.LENGTH_SHORT).show();
+                                    Intent intent1 = new Intent();
+                                    intent1.setAction("renew_user_info");
+                                    sendBroadcast(intent1);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(user_info.this, msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onProgress(Integer value) {
+                            // 返回的上传进度（百分比）
+                        }
+
+                        @Override
+                        public void onFailure(int code, String msg) {
+                            progressDialog.dismiss();
+                            Toast.makeText(user_info.this, msg, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

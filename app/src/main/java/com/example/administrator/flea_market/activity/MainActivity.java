@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         mTabs[3] = center;
         mTabs[0].setSelected(true);
         //连接服务器
-        myUser = BmobUser.getCurrentUser(MyUser.class);
+        myUser = BmobUser.getCurrentUser(this, MyUser.class);
         BmobIM.connect(myUser.getObjectId(), new ConnectListener() {
             @Override
             public void done(String uid, BmobException e) {

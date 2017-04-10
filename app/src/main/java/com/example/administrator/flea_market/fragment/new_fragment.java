@@ -31,7 +31,7 @@ public class new_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View new_layout = inflater.inflate(R.layout.new_fragment, container, false);
-        MyUser myUser = BmobUser.getCurrentUser(MyUser.class);
+        MyUser myUser = BmobUser.getCurrentUser(getActivity(), MyUser.class);
         object_id = myUser.getObjectId();
         final View new_book = new_layout.findViewById(R.id.new_book);
         new_book.setOnClickListener(new View.OnClickListener() {

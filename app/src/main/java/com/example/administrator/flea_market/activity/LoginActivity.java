@@ -24,7 +24,7 @@ import com.example.administrator.flea_market.bean.MyUser;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.SaveListener;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -77,44 +77,32 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         final MyUser myUser = new MyUser();
         myUser.setUsername(user);
         myUser.setPassword(password);
-        myUser.login(new SaveListener<BmobUser>() {
+        myUser.login(this, new SaveListener() {
             @Override
-            public void done(BmobUser bmobUser, BmobException e) {
-                if (e == null) {
-                    BmobQuery<MyUser> query = new BmobQuery<MyUser>();
-                    query.getObject(myUser.getObjectId(), new QueryListener<MyUser>() {
-
-                        @Override
-                        public void done(MyUser object, BmobException e) {
-                            if(e==null){
-                                if (object.getName() == null) {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    String object_id = myUser.getObjectId();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("object_id", object_id);
-                                    intent.setClass(LoginActivity.this, EditUser.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    String object_id = myUser.getObjectId();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("object_id", object_id);
-                                    intent.setClass(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }else{
-                                Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                            }
-                        }
-
-                    });
-
-                } else {
-                    passwordtext.setError(Html.fromHtml("<font color=#ff0000>username or password is wrong</font>"));
+            public void onSuccess() {
+                MyUser user =  BmobUser.getCurrentUser(LoginActivity.this, MyUser.class);
+                if (user.getName() == null) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    String object_id = user.getObjectId();
+                    Intent intent = new Intent();
+                    intent.putExtra("object_id", object_id);
+                    intent.setClass(LoginActivity.this, EditUser.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    String object_id = user.getObjectId();
+                    Intent intent = new Intent();
+                    intent.putExtra("object_id", object_id);
+                    intent.setClass(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
+            }
+            @Override
+            public void onFailure(int code, String msg) {
+                passwordtext.setError(Html.fromHtml("<font color=#ff0000>username or password is wrong</font>"));
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

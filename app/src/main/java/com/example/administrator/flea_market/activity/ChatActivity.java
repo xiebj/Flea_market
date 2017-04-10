@@ -41,8 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMAudioMessage;
 import cn.bmob.newim.bean.BmobIMConversation;
@@ -62,7 +60,6 @@ import cn.bmob.newim.listener.ObseverListener;
 import cn.bmob.newim.listener.OnRecordChangeListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
 import cn.bmob.v3.exception.BmobException;
-import okhttp3.internal.Util;
 
 /**
  * Created by Administrator on 2017/4/4.
@@ -100,12 +97,12 @@ public class ChatActivity extends Activity implements ObseverListener, MessageLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Intent intent = getIntent();
-        c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) intent.getBundleExtra("chat_user").getSerializable("c"));
+        c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getBundle().getSerializable("c"));
 
         iv_record = (ImageView) findViewById(R.id.iv_record);
         tv_voice_tips = (TextView) findViewById(R.id.tv_voice_tips);
         tv_title = (TextView) findViewById(R.id.chat_title);
-        tv_title.setText(intent.getStringExtra("user_name"));
+        tv_title.setText(c.getConversationTitle());
         layout_record = (RelativeLayout) findViewById(R.id.layout_record);
         layout_more = (LinearLayout) findViewById(R.id.layout_more);
         layout_add = (LinearLayout) findViewById(R.id.layout_add);
@@ -270,8 +267,6 @@ public class ChatActivity extends Activity implements ObseverListener, MessageLi
     /**
      * 长按说话
      *
-     * @author smile
-     * @date 2014-7-1 下午6:10:16
      */
     class VoiceTouchListener implements View.OnTouchListener {
         @Override
@@ -724,5 +719,12 @@ public class ChatActivity extends Activity implements ObseverListener, MessageLi
             if (getCurrentFocus() != null)
                 manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public Bundle getBundle() {
+        if (getIntent() != null && getIntent().hasExtra(getPackageName()))
+            return getIntent().getBundleExtra(getPackageName());
+        else
+            return null;
     }
 }

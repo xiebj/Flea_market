@@ -36,9 +36,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final int TYPE_SEND_VIDEO =8;
     private final int TYPE_RECEIVER_VIDEO = 9;
 
-    //同意添加好友成功后的样式
-    private final int TYPE_AGREE = 10;
-
     /**
      * 显示时间间隔:10分钟
      */
@@ -51,7 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public ChatAdapter(Context context,BmobIMConversation c) {
         try {
-            currentUid = BmobUser.getCurrentUser(MyUser.class).getObjectId();
+            currentUid = BmobUser.getCurrentUser(context, MyUser.class).getObjectId();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,8 +138,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return new SendVideoHolder(parent.getContext(), parent,c,onRecyclerViewListener);
         } else if (viewType == TYPE_RECEIVER_VIDEO) {
             return new ReceiveVideoHolder(parent.getContext(), parent,onRecyclerViewListener);
-        }else if(viewType ==TYPE_AGREE) {
-            return new AgreeHolder(parent.getContext(),parent,onRecyclerViewListener);
         }else{//开发者自定义的其他类型，可自行处理
             return null;
         }
@@ -171,8 +166,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ((SendVideoHolder)holder).showTime(shouldShowTime(position));
         }else if (holder instanceof ReceiveVideoHolder) {
             ((ReceiveVideoHolder)holder).showTime(shouldShowTime(position));
-        }else if (holder instanceof AgreeHolder) {//同意添加好友成功后的消息
-            ((AgreeHolder)holder).showTime(shouldShowTime(position));
         }
     }
 
@@ -189,8 +182,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return message.getFromId().equals(currentUid) ? TYPE_SEND_TXT: TYPE_RECEIVER_TXT;
         }else if(message.getMsgType().equals(BmobIMMessageType.VIDEO.getType())){
             return message.getFromId().equals(currentUid) ? TYPE_SEND_VIDEO: TYPE_RECEIVER_VIDEO;
-        }else if(message.getMsgType().equals("agree")) {//显示欢迎
-            return TYPE_AGREE;
         }else{
             return -1;
         }

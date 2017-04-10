@@ -71,7 +71,7 @@ public class Comment_Adapter extends BaseAdapter {
                 .cacheOnDisk(true) // sdcard缓存
                 .bitmapConfig(Bitmap.Config.RGB_565)// 设置�?低配�?
                 .build();//
-        ImageLoader.getInstance().displayImage(data.get(i).getAuthor().getAvator().getFileUrl(), holder.iv_avatar, options);
+        ImageLoader.getInstance().displayImage(data.get(i).getAuthor().getAvator().getFileUrl(context), holder.iv_avatar, options);
         return convertView;
     }
 
